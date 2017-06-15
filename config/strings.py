@@ -1,4 +1,5 @@
 class Strings:
+    appname = 'Grus'
     colon = 'colon'
     colonsym = ':'
     comma = ','

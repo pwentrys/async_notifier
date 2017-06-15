@@ -1,5 +1,6 @@
 from win10toast import ToastNotifier
 from config.utils import from_args_fallback as ff, from_args_fallback_int as ffi
+from config.strings import Strings as s
 import os
 import asyncio
 
@@ -7,19 +8,23 @@ import asyncio
 class Toaster:
     DEFAULT_DURATION = 1
     DEFAULT_MSG = ''
-    DEFAULT_TITLE = 'Andromeda'
+    DEFAULT_TITLE = s.appname
     DEFAULT_ICON = 'static\\icon.png'
 
     def __init__(self):
         self.t = ToastNotifier()
-        self.loop = asyncio.get_event_loop()
-        self.nextend = self.loop.time
-        self.loop.run_forever()
+        self.socketio = ''
+        self.open()
+
+    def open(self):
+        if self.socketio:
+            self.socketio.start_background_task(self.t.show_toast, {'title': Toaster.DEFAULT_TITLE, 'msg': 'Online.'})
+        # self.t.show_toast(title=Toaster.DEFAULT_TITLE, msg='Online.')
 
     def close(self):
-        self.t.show_toast(title=Toaster.DEFAULT_TITLE, msg='Offline.')
-        if not self.loop.is_closed():
-            self.loop.close()
+        if self.socketio:
+            self.socketio.start_background_task(self.t.show_toast, {'title': Toaster.DEFAULT_TITLE, 'msg': 'Offline.'})
+        # self.t.show_toast(title=Toaster.DEFAULT_TITLE, msg='Offline.')
 
     def show_default_toast(self):
         self.t.show_toast("Hello World!!!",
@@ -30,25 +35,18 @@ class Toaster:
                           f'{args.get("message", "ERROR")}'
                           )
 
-    @staticmethod
-    def _toast_args(args, loop):
-        t = args['t']
-        title = ff(args, 'title', Toaster.DEFAULT_TITLE)
-        msg = ff(args, 'msg', Toaster.DEFAULT_MSG)
-        duration = ffi(args, 'duration', Toaster.DEFAULT_DURATION)
-        lt = loop.time()
-        if lt > t.nextend:
-            t.nextend = lt + duration
-            t.show_toast(title=title,
-                         msg=msg,
-                         duration=duration
-                         )
-        else:
-            loop.call_later(t.nextend - lt, Toaster._toast_args, args, loop)
-
     def toast_args(self, args):
-        args['t'] = self
-        self.loop.call_soon(Toaster._toast_args, args, self.loop)
+        if self.socketio:
+            print(f'Toast Args - Start')
+            title = ff(args, 'title', Toaster.DEFAULT_TITLE)
+            msg = ff(args, 'msg', Toaster.DEFAULT_MSG)
+            duration = ffi(args, 'duration', Toaster.DEFAULT_DURATION)
+            self.t.show_toast(title=title, msg=msg, duration=duration)
+            print(f'Toast Args - End')
+        # self.t.show_toast(title=title,
+        #                   msg=msg,
+        #                   duration=duration
+        #                   )
 
     def toast_title(self, title):
         self.t.show_toast(

@@ -1,8 +1,9 @@
 from .models.config import Config
 from .models.webenvs import WebEnvs
+from config.strings import Strings as s
 
 
-appname = f'Grus'
+appname = s.appname
 appnamelower = appname.lower()
 is_debug = False  # SUPER IMPORTANT
 
