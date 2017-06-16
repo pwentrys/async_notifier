@@ -32,6 +32,9 @@ _app = Flask(
     static_folder=s.static
 )
 
+_app.last_msg = s.empty
+_app.last_title = s.empty
+
 
 _app._config = _config
 _app.__name__ = _config.name
