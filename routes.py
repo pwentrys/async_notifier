@@ -16,15 +16,18 @@ def app_routes(app, appname):
     #                                                                              #
     # ---------------------------------------------------------------------------- #
     def _run_toast(title, msg, duration):
-        duration = int(duration)
-        app.sql.execute(f'INSERT INTO `{s.appname}`.`messages` (`title`, `message`, `icon_id`, `duration`) VALUES (\'{title}\', \'{msg}\', 0, {duration});')
-        app.sql.commit()
-        app.toaster.show_toast(title=title, msg=msg, duration=duration)
+        if msg != app.last_msg and title != app.last_title:
+            app.last_title = title
+            app.last_msg = msg
+            duration = int(duration)
+            app.sql.execute(f'INSERT INTO `{s.appname}`.`messages` (`title`, `message`, `icon_id`, `duration`) VALUES (\'{title}\', \'{msg}\', 0, {duration});')
+            app.sql.commit()
+            app.toaster.show_toast(title=title, msg=msg, duration=duration)
 
     def run_toast(title=s.appname, msg='EMPTY', duration='1'):
-        print(f'Title: {title}')
-        print(f'Message: {msg}')
-        print(f'Duration: {duration}')
+        # print(f'Title: {title}')
+        # print(f'Message: {msg}')
+        # print(f'Duration: {duration}')
         # app.socketio.start_background_task(app.toaster.show_toast, **{'title': title, 'msg': msg, 'duration': duration})
         app.socketio.start_background_task(_run_toast, **{'title': title, 'msg': msg, 'duration': f'{duration}'})
 
