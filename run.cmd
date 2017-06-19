@@ -1,1 +1,1 @@
-H:\Code\python_venv_361\Scripts\python.exe H:\Code\python\gappi_private\andromeda.py -dev
+H:\Code\python_envs\grus_361_win_64\Scripts\python.exe H:\Code\python\grus\grus.py
