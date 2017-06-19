@@ -1,4 +1,4 @@
-from config.strings import Strings as s
+from utils.strings import Strings as s
 
 
 def _add_url_vars_list(app, var_list, string, func):
