@@ -1,8 +1,9 @@
 import pathlib
-import pyodbc
 from os import listdir, path
 
-from config.strings import Strings as s
+import pyodbc
+
+from utils.strings import Strings as s
 
 
 class Connection:
