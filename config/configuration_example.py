@@ -1,7 +1,6 @@
+from utils.strings import Strings as s
 from .models.config import Config
 from .models.webenvs import WebEnvs
-from config.strings import Strings as s
-
 
 appname = s.appname
 appnamelower = appname.lower()
