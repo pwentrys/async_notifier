@@ -1,5 +1,5 @@
+from utils.strings import Strings as s
 from ..utils import from_args as f, from_args_fallback as ff, from_args_fallback_int as ffi
-from config.strings import Strings as s
 
 
 class SQLEnv:
