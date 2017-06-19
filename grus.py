@@ -6,7 +6,7 @@
 from argparse import ArgumentParser
 
 from app import _app
-from config.strings import Strings as s
+from utils.strings import Strings as s
 
 parser = ArgumentParser(__file__, description=s.appname)
 
@@ -33,9 +33,7 @@ args = parser.parse_args()
 # --------------------------------------------------------------------------- #
 
 if __name__ == s.main:
-    # _app.toaster.toast_args({'msg': 'Online.'})
-    # _app.sched.enter(1, 1, _app.toaster.show_toast, {'title': 'App Started', 'msg': 'Online.', 'duration': 1})
-    # _app.sched.run(False)
+    _app.toaster.show_toast(title=s.appname, msg='Online')
     _app.socketio.run(_app,
                       host=_app._config.web.active.address,
                       port=_app._config.web.active.port,
