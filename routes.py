@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_cors import cross_origin
 
-from config.strings import Strings as s
 from config.templates import Templates
 from utils.flask_extensions import add_url_vars
+from utils.strings import Strings as s
 
 
 def app_routes(app, appname):
@@ -15,21 +15,15 @@ def app_routes(app, appname):
     #                           Landing Page                                       #
     #                                                                              #
     # ---------------------------------------------------------------------------- #
-    def _run_toast(title, msg, duration):
+    def _run_toast(title='TITLE', msg='MESSAGE', duration=3):
         if msg != app.last_msg and title != app.last_title:
             app.last_title = title
             app.last_msg = msg
-            duration = int(duration)
+            if type(duration) == type(''):
+                duration = int(duration)
+            app.toaster.show_toast(title=title, msg=msg, duration=duration)
             app.sql.execute(f'INSERT INTO `{s.appname}`.`messages` (`title`, `message`, `icon_id`, `duration`) VALUES (\'{title}\', \'{msg}\', 0, {duration});')
             app.sql.commit()
-            app.toaster.show_toast(title=title, msg=msg, duration=duration)
-
-    def run_toast(title=s.appname, msg='EMPTY', duration='1'):
-        # print(f'Title: {title}')
-        # print(f'Message: {msg}')
-        # print(f'Duration: {duration}')
-        # app.socketio.start_background_task(app.toaster.show_toast, **{'title': title, 'msg': msg, 'duration': duration})
-        app.socketio.start_background_task(_run_toast, **{'title': title, 'msg': msg, 'duration': f'{duration}'})
 
     @app.route(s.slash)
     @cross_origin()
@@ -41,10 +35,7 @@ def app_routes(app, appname):
 
     @cross_origin()
     def toast():
-        #  app.socketio.start_background_task(app.toaster.show_toast, **{'msg': f'Test'})
-        app.sched.enter(0.01, 0.01, run_toast, [s.appname, 'EMPTY', f'{1}'])
-        app.sched.run(True)
-        #  app.socketio.start_background_task(app.toaster.toast_args, {'msg': 'Test'})
+        _run_toast(s.appname, 'EMPTY', 1)
         return """
             Testy test
         """
@@ -52,9 +43,7 @@ def app_routes(app, appname):
 
     @cross_origin()
     def toast_message(message):
-        app.sched.enter(0.01, 0.01, run_toast, [s.appname, message, f'{1}'])
-        app.sched.run(True)
-        #  app.socketio.start_background_task(app.toaster.show_toast, **{'msg': message})
+        _run_toast(s.appname, message, 1)
         return """
             Testy test
         """
@@ -62,9 +51,7 @@ def app_routes(app, appname):
 
     @cross_origin()
     def toast_title_message(title, message):
-        app.sched.enter(0.01, 0.01, run_toast, [title, message, f'{1}'])
-        app.sched.run(True)
-        #  app.socketio.start_background_task(app.toaster.show_toast, **{'title': title, 'msg': message})
+        _run_toast(f'{title}', f'{message}', 1)
         return """
             Testy test
         """
@@ -72,9 +59,7 @@ def app_routes(app, appname):
 
     @cross_origin()
     def toast_title_message_duration(title, message, duration):
-        app.sched.enter(0.01, 0.01, run_toast, [title, message, f'{duration}'])
-        app.sched.run(True)
-        #  app.socketio.start_background_task(app.toaster.show_toast, **{'title': title, 'msg': message, 'duration': duration})
+        _run_toast(f'{title}', f'{message}', duration)
         return """
             Testy test
         """
