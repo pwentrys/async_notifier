@@ -4,20 +4,19 @@
 #                                                                             #
 # --------------------------------------------------------------------------- #
 
+import sched
+import time
 from datetime import timedelta
 
 from flask import Flask
 from flask_socketio import SocketIO
-
-from sql.mysql import Connection as mysql
-
-from config.configuration import config as _config
-from config.strings import Strings as s
-from routes import app_routes as setup_routes
 # from utils.toaster import Toaster
 from win10toast import ToastNotifier
-import sched
-import time
+
+from config.configuration import config as _config
+from routes import app_routes as setup_routes
+from sql.mysql import Connection as mysql
+from utils.strings import Strings as s
 
 # --------------------------------------------------------------------------- #
 #                                                                             #
@@ -55,6 +54,6 @@ _app.toaster = ToastNotifier()
 _app.sched = sched.scheduler(time.time, time.sleep)
 _app.sql = mysql(_config.sql.mysql, _app.toaster)
 
-_app.socketio = SocketIO(_app, async_mode=f'eventlet')
+_app.socketio = SocketIO(_app)
 setup_routes(_app, _app.__name__)
 thread = None
