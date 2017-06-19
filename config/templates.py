@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from config.strings import Strings as s
+from utils.strings import Strings as s
 
 
 class Template:
