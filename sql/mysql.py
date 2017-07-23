@@ -125,12 +125,18 @@ class Connection:
             self.connection.setdecoding(pyodbc.SQL_WCHAR, encoding=s.utf_8)
             self.connection.setencoding(encoding=s.utf_8)
             self.connected = True
-            self.toast.show_toast(title=s.appname, msg='MySQL - Connected.', duration=1)
+            self.toast.show_toast(
+                title=s.appname,
+                msg='MySQL - Connected.',
+                duration=1)
             return self.connection
         except Exception as error:
             print(f'CONNECTION ERROR\n{error}')
             self.connected = False
-            self.toast.show_toast(title=s.appname, msg='MySQL - Disconnected.', duration=1)
+            self.toast.show_toast(
+                title=s.appname,
+                msg='MySQL - Disconnected.',
+                duration=1)
             return error
 
     def execute(self, query):
@@ -174,7 +180,10 @@ class Connection:
                 return
 
             self.connected = False
-            self.toast.show_toast(title=s.appname, msg='MySQL - Disconnected.', duration=1)
+            self.toast.show_toast(
+                title=s.appname,
+                msg='MySQL - Disconnected.',
+                duration=1)
             self.connection.close()
         except Exception as error:
             print(error)

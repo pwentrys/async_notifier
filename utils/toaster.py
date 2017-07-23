@@ -17,11 +17,15 @@ class Toaster:
 
     def open(self):
         if self.socketio:
-            self.socketio.start_background_task(self.t.show_toast, {'title': Toaster.DEFAULT_TITLE, 'msg': 'Online.'})
+            self.socketio.start_background_task(
+                self.t.show_toast,
+                {'title': Toaster.DEFAULT_TITLE, 'msg': 'Online.'})
 
     def close(self):
         if self.socketio:
-            self.socketio.start_background_task(self.t.show_toast, {'title': Toaster.DEFAULT_TITLE, 'msg': 'Offline.'})
+            self.socketio.start_background_task(
+                self.t.show_toast,
+                {'title': Toaster.DEFAULT_TITLE, 'msg': 'Offline.'})
 
     def toast_args(self, args):
         title = ff(args, 'title', Toaster.DEFAULT_TITLE)
@@ -29,7 +33,9 @@ class Toaster:
         duration = ffi(args, 'duration', Toaster.DEFAULT_DURATION)
         try:
             if self.socketio:
-                self.socketio.start_background_task(self.t.show_toast, {'title': Toaster.DEFAULT_TITLE, 'msg': 'Online.'})
+                self.socketio.start_background_task(
+                    self.t.show_toast,
+                    {'title': Toaster.DEFAULT_TITLE, 'msg': 'Online.'})
             else:
                 self.t.show_toast(title=title, msg=msg, duration=duration)
         except Exception as error:
