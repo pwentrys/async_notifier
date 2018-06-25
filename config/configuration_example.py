@@ -1,5 +1,7 @@
 from utils.strings import Strings as s
+from .credentials import SQL_USER, SQL_PASS, SQL_SCHEMA
 from .models.config import Config
+from .models.sqlenvs import SQLEnvs
 from .models.webenvs import WebEnvs
 
 appname = s.appname
@@ -27,4 +29,14 @@ config = Config({
             'lifetime': 1  # session lifetime in days.
         },
     }),
+    'sql': SQLEnvs({
+        'mysql': {
+            'USERNAME': SQL_USER,
+            'PASSWORD': SQL_PASS,
+            'DATABASE': SQL_SCHEMA,
+            'CONFIGS': '?charset=utf8',
+            'ADDRESS': '0.0.0.0',
+            'PORT': 3306,
+        }
+    })
 })
